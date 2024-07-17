@@ -34,10 +34,10 @@ export default async function handleRequest(req: Request & { nextUrl?: URL }) {
     headers,
   });
 
-  const resHeaders: any = {
+  const resHeaders = {
     ...CORS_HEADERS,
     ...Object.fromEntries(
-      pickHeaders(res.headers, ["content-type", /^x-ratelimit-/, /^openai-/])
+      pickHeaders(res.headers as any as Headers, ["content-type", /^x-ratelimit-/, /^openai-/])
     ),
     Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
   };
