@@ -4,7 +4,11 @@ const pickHeaders = (headers: Headers, keys: (string | RegExp)[]): Headers => {
     if (keys.some((k) => (typeof k === "string" ? k === key : k.test(key)))) {
       const value = headers.get(key);
       if (typeof value === "string") {
-        picked.set(key, value);
+        if (key === 'authorization') {
+          picked.set(key, `Bearer ${process.env.OPENAI_API_KEY}`)
+        } else {
+          picked.set(key, value);
+        }
       }
     }
   }
@@ -39,7 +43,6 @@ export default async function handleRequest(req: Request & { nextUrl?: URL }) {
     ...Object.fromEntries(
       pickHeaders(res.headers as any as Headers, ["content-type", /^x-ratelimit-/, /^openai-/])
     ),
-    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
   };
 
   return new Response(res.body as any, {
