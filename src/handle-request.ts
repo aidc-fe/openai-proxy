@@ -42,7 +42,7 @@ export default async function handleRequest(req: Request & { nextUrl?: URL }) {
     Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
   };
 
-  return new Response(res.body, {
+  return new Response(res.body as any, {
     headers: resHeaders,
     status: res.status
   });
