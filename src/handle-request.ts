@@ -34,12 +34,12 @@ export default async function handleRequest(req: Request & { nextUrl?: URL }) {
     headers,
   });
 
-  const resHeaders = {
+  const resHeaders: any = {
     ...CORS_HEADERS,
     ...Object.fromEntries(
       pickHeaders(res.headers, ["content-type", /^x-ratelimit-/, /^openai-/])
     ),
-    // Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
   };
 
   return new Response(res.body, {
