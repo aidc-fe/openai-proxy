@@ -5,7 +5,10 @@ const pickHeaders = (headers: Headers, keys: (string | RegExp)[]): Headers => {
       const value = headers.get(key);
       if (typeof value === "string") {
         if (key === 'authorization') {
-          picked.set(key, `Bearer ${process.env.OPENAI_API_KEY}`)
+          // picked.set(key, `Bearer ${process.env.OPENAI_API_KEY}`)
+          if (process.env.OPENAI_API_KEY) {
+            picked.set('api-key', process.env.OPENAI_API_KEY)
+          }
         } else {
           picked.set(key, value);
         }
@@ -28,9 +31,10 @@ export default async function handleRequest(req: Request & { nextUrl?: URL }) {
     });
   }
 
-  const { pathname, search } = req.nextUrl ? req.nextUrl : new URL(req.url);
-  const url = new URL(pathname + search, "https://api.openai.com").href;
-  const headers = pickHeaders(req.headers, ["content-type", "authorization"]);
+  const { pathname } = req.nextUrl ? req.nextUrl : new URL(req.url);
+  const url = new URL('/openai/deployments/gpt-4o' + pathname + '?api-version=2024-02-01', process.env.OPENAI_API_BASE).href;
+  console.log('url', url);
+  const headers = pickHeaders(req.headers, ["content-type", "authorization", ]);
 
   const res = await fetch(url, {
     body: req.body,
