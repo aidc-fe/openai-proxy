@@ -32,7 +32,7 @@ export default async function handleRequest(req: Request & { nextUrl?: URL }) {
   }
 
   const { pathname } = req.nextUrl ? req.nextUrl : new URL(req.url);
-  const url = new URL('/openai/deployments/gpt-4o' + pathname + '?api-version=2024-02-01', process.env.OPENAI_API_BASE).href;
+  const url = new URL('/openai/deployments/gpt-4o-0806' + pathname + '?api-version=2024-08-01-preview', process.env.OPENAI_API_BASE).href;
   console.log('url', url);
   const headers = pickHeaders(req.headers, ["content-type", "authorization", ]);
 
